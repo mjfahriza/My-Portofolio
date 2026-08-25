@@ -739,6 +739,72 @@
             background: rgba(255, 255, 255, 0.08);
         }
 
+        /* --- 5. AWARDS SECTION --- */
+        .award-card {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2.5rem;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--surface-border);
+            border-radius: 20px;
+            padding: 2rem;
+            align-items: center;
+            transition: 0.3s;
+        }
+
+        .award-card:hover {
+            border-color: rgba(45, 212, 191, 0.3);
+            transform: translateY(-4px);
+        }
+
+        .award-badge {
+            display: inline-block;
+            background: rgba(45, 212, 191, 0.1);
+            color: var(--accent);
+            padding: 0.4rem 1rem;
+            border-radius: 99px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 1.2rem;
+            border: 1px solid rgba(45, 212, 191, 0.2);
+        }
+
+        .award-title {
+            font-size: 1.6rem;
+            color: #fff;
+            margin-bottom: 1rem;
+            font-weight: 700;
+            line-height: 1.3;
+        }
+
+        .award-desc {
+            color: var(--text-muted);
+            line-height: 1.7;
+            font-size: 0.95rem;
+        }
+
+        .award-image-wrapper {
+            width: 100%;
+            height: 280px;
+            border-radius: 14px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .award-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .section-title-left {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 0.5rem;
+        }
+
         /* --- 6. FOOTER SECTION --- */
         .footer-section {
             width: 100%;
@@ -983,6 +1049,17 @@
                 width: 95%;
                 padding-top: 6rem;
             }
+            .award-card {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            .award-image-wrapper {
+                height: 250px;
+                margin-top: 1rem;
+            }
+            .section-title-left {
+                text-align: center;
+            }
         }
     </style>
 </head>
@@ -995,6 +1072,7 @@
             <a href="#about" class="nav-item">About</a>
             <a href="#skills" class="nav-item">Skills</a>
             <a href="#projects" class="nav-item">Projects</a>
+            <a href="#awards" class="nav-item">Awards</a>
             <a href="#contact" class="nav-item">Contact</a>
         </nav>
     </div>
@@ -1146,6 +1224,32 @@
             </div>
         </div>
 
+        <!-- 5. AWARDS SECTION -->
+        <div class="card-section" id="awards">
+            <div class="skills-header" style="text-align: left; margin-bottom: 2rem;">
+                <h2 class="section-title-left">🏆 Penghargaan & <span>Sertifikasi</span></h2>
+                <p class="skills-subtitle" style="margin: 0; max-width: 100%;">Pencapaian dan pengakuan atas dedikasi serta kompetensi di bidang teknologi.</p>
+            </div>
+
+            <!-- Kontainer Kartu Penghargaan -->
+            <div class="award-card">
+                
+                <!-- Kolom Kiri: Teks -->
+                <div class="award-content">
+                    <div class="award-badge">2025 - Outstanding Performance</div>
+                    <h3 class="award-title">Sertifikat: Apreciate👋</h3>
+                    <p class="award-desc">Sebuah pengakuan dan apresiasi khusus kepada yang telah mengikuti Pelatihan Bimbingan Pengenalan dasar website menggunakan AI.</p>
+                </div>
+
+                <!-- Kolom Kanan: Tempat Foto Penghargaan -->
+                <div class="award-image-wrapper">
+                    <!-- Ganti "foto-penghargaan.jpg" dengan nama file Anda -->
+                    <img src="Foto/coding dengan AI.jpeg" alt="Foto Piagam Penghargaan" class="award-img">
+                </div>
+
+            </div>
+        </div>
+
         <!-- 5. CONTACT SECTION -->
         <div class="card-section" id="contact">
             <div class="contact-layout">
@@ -1260,6 +1364,7 @@
                         <li><a href="#projects">Projects</a></li>
                     </ul>
                     <ul class="footer-links-list">
+                        <li><a href="#awards">Awards</a></li>
                         <li><a href="#about">About</a></li>
                         <li><a href="#contact">Contact</a></li>
                     </ul>
