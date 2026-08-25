@@ -1,0 +1,1382 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portofolio | Modern Developer</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+        :root {
+            --bg-color: #0b0f19;
+            --surface-color: rgba(255, 255, 255, 0.025);
+            --surface-border: rgba(255, 255, 255, 0.07);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #2dd4bf; /* Hijau Telur Asin / Mint (Warna Utama Project) */
+            --accent-glow: rgba(45, 212, 191, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+            
+            background-image: 
+                radial-gradient(circle at 10% 10%, rgba(45, 212, 191, 0.06), transparent 40%),
+                radial-gradient(circle at 90% 90%, rgba(20, 184, 166, 0.04), transparent 40%);
+            background-attachment: fixed;
+        }
+
+        /* --- Floating Pill Navbar dengan Efek Auto-Hide --- */
+        .floating-nav-container {
+            position: fixed;
+            top: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+        }
+
+        .floating-nav-container.hide {
+            transform: translate(-50%, -100px);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .floating-nav {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--surface-border);
+            padding: 6px;
+            border-radius: 99px;
+            display: flex;
+            gap: 4px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .nav-item {
+            color: var(--text-muted);
+            text-decoration: none;
+            padding: 8px 16px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            border-radius: 99px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .nav-item:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-item.active {
+            background-color: var(--accent);
+            color: #0b0f19;
+            font-weight: 700;
+            box-shadow: 0 0 15px var(--accent-glow);
+        }
+
+        /* --- Container Utama (Full-Width) --- */
+        .main-container {
+            max-width: 1200px;
+            width: 92%;
+            padding: 7rem 0 4rem 0;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        /* Kartu Section Umum */
+        .card-section {
+            background: var(--surface-color);
+            border: 1px solid var(--surface-border);
+            border-radius: 24px;
+            padding: 3rem;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            transition: border-color 0.3s ease;
+        }
+
+        .card-section:hover {
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        /* --- 1. HERO SECTION & 3D FLIP PHOTO BANNER --- */
+        .hero-section {
+            display: grid;
+            grid-template-columns: 1.3fr 0.7fr;
+            gap: 3rem;
+            align-items: center;
+            background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.005) 100%);
+        }
+
+        .hero-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .badge-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(45, 212, 191, 0.1);
+            border: 1px solid rgba(45, 212, 191, 0.2);
+            padding: 0.4rem 0.9rem;
+            border-radius: 99px;
+            font-size: 0.85rem;
+            color: var(--accent);
+            width: fit-content;
+            margin-bottom: 1.2rem;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #22c55e;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #22c55e;
+        }
+
+        h1 {
+            font-size: clamp(2.5rem, 5vw, 3.8rem);
+            line-height: 1.15;
+            margin-bottom: 1.2rem;
+            font-weight: 700;
+        }
+
+        h1 span {
+            color: var(--accent);
+        }
+
+        .hero-desc {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            line-height: 1.7;
+        }
+
+        /* Konainer 3D Flip untuk Foto Banner */
+        .hero-banner-container {
+            width: 100%;
+            height: 380px;
+            perspective: 1000px;
+            background: transparent;
+        }
+
+        .hero-banner-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .hero-banner-container:hover .hero-banner-inner {
+            transform: rotateY(180deg);
+        }
+
+        .hero-banner-front, .hero-banner-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .hero-banner-front {
+            background: #0f172a;
+        }
+
+        .hero-banner-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .hero-banner-back {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(20, 184, 166, 0.15) 100%);
+            color: var(--text-main);
+            transform: rotateY(180deg);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2.5rem;
+            text-align: center;
+            border-color: rgba(45, 212, 191, 0.3);
+            box-shadow: inset 0 0 30px rgba(45, 212, 191, 0.1);
+        }
+
+        .back-card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--accent);
+        }
+
+        .back-card-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 0.5rem;
+        }
+
+        .back-card-desc {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        /* --- 2. ABOUT SECTION (Desain Baru Elegan & Interaktif) --- */
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1.3fr 0.9fr;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .about-badge-top {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            color: var(--accent);
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .about-badge-top .line {
+            width: 24px;
+            height: 2px;
+            background-color: var(--accent);
+            display: inline-block;
+        }
+
+        .about-title {
+            font-size: clamp(2rem, 3.2vw, 2.8rem);
+            font-weight: 700;
+            line-height: 1.2;
+            color: #fff;
+            margin-bottom: 1.2rem;
+        }
+
+        .about-title span {
+            color: var(--accent);
+        }
+
+        .about-desc {
+            color: var(--text-muted);
+            font-size: 1rem;
+            line-height: 1.75;
+            margin-bottom: 1rem;
+        }
+
+        .about-desc strong {
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .about-pills-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-top: 1.8rem;
+        }
+
+        .about-pill-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(45, 212, 191, 0.05);
+            border: 1px solid rgba(45, 212, 191, 0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 99px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--accent);
+            transition: 0.2s;
+        }
+
+        .about-pill-item:hover {
+            background: rgba(45, 212, 191, 0.12);
+            transform: translateY(-2px);
+        }
+
+        /* Sisi Kanan: Visual & Floating Stat Cards */
+        .about-visual-area {
+            position: relative;
+            width: 100%;
+            height: 360px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .about-radar-bg {
+            position: absolute;
+            width: 280px;
+            height: 280px;
+            border: 1px dashed rgba(45, 212, 191, 0.15);
+            border-radius: 50%;
+            animation: spinRadar 25s linear infinite;
+        }
+
+        .about-radar-bg.outer {
+            width: 340px;
+            height: 340px;
+            border-color: rgba(255, 255, 255, 0.04);
+            animation-direction: reverse;
+            animation-duration: 35s;
+        }
+
+        @keyframes spinRadar {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .about-avatar-wrapper {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid var(--accent);
+            box-shadow: 0 0 30px var(--accent-glow);
+            z-index: 2;
+            position: relative;
+        }
+
+        .about-avatar-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .about-avatar-wrapper:hover .about-avatar-img {
+            transform: scale(1.08);
+        }
+
+        /* Floating Cards di Area About */
+        .floating-stat-card {
+            position: absolute;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--surface-border);
+            padding: 0.8rem 1.1rem;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+            z-index: 3;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .floating-stat-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-4px);
+        }
+
+        .floating-stat-card.fsc-1 {
+            top: 20px;
+            left: 10px;
+        }
+
+        .floating-stat-card.fsc-2 {
+            bottom: 30px;
+            right: 5px;
+        }
+
+        .floating-stat-card.fsc-3 {
+            bottom: 10px;
+            left: 20px;
+        }
+
+        .fsc-icon {
+            width: 34px;
+            height: 34px;
+            background: rgba(45, 212, 191, 0.1);
+            color: var(--accent);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.95rem;
+        }
+
+        .fsc-info .fsc-num {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #fff;
+            line-height: 1.1;
+        }
+
+        .fsc-info .fsc-label {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+        }
+
+        /* --- 3. SKILLS & TECHNOLOGIES SECTION --- */
+        .skills-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .skills-main-title {
+            font-size: clamp(2rem, 3.5vw, 2.8rem);
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 0.6rem;
+        }
+
+        .skills-main-title span {
+            color: var(--accent);
+        }
+
+        .skills-subtitle {
+            color: var(--text-muted);
+            font-size: 1rem;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .skills-grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .tech-card {
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid var(--surface-border);
+            border-radius: 20px;
+            padding: 2.2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .tech-card:hover {
+            border-color: rgba(45, 212, 191, 0.4);
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(45, 212, 191, 0.15);
+        }
+
+        .tech-icon-box {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: rgba(45, 212, 191, 0.1);
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(45, 212, 191, 0.2);
+        }
+
+        .tech-card-title {
+            font-size: 1.3rem;
+            color: #fff;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .tech-card-desc {
+            color: var(--text-muted);
+            font-size: 0.92rem;
+            margin-bottom: 1.8rem;
+            line-height: 1.6;
+        }
+
+        .tech-tags-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+        }
+
+        .tech-tag {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--surface-border);
+            padding: 0.45rem 0.95rem;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-main);
+            transition: 0.2s;
+        }
+
+        .tech-card:hover .tech-tag {
+            border-color: rgba(45, 212, 191, 0.3);
+        }
+
+        /* --- 4. PROJECTS SECTION --- */
+        .projects-wrapper {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .project-card {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--surface-border);
+            border-radius: 18px;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: 0.3s;
+        }
+
+        .project-card:hover {
+            border-color: rgba(45, 212, 191, 0.3);
+            transform: translateY(-4px);
+        }
+
+        .project-card h3 {
+            font-size: 1.25rem;
+            color: #fff;
+            margin-bottom: 0.6rem;
+        }
+
+        .project-card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .project-btn {
+            align-self: flex-start;
+            padding: 0.5rem 1.1rem;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 8px;
+            color: #fff;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: 0.2s;
+        }
+
+        .project-btn:hover {
+            background: var(--accent);
+            color: #0b0f19;
+            font-weight: 600;
+        }
+
+        /* --- 5. CONTACT SECTION --- */
+        .contact-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .contact-left .badge-connect {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--surface-border);
+            padding: 0.4rem 1rem;
+            border-radius: 99px;
+            font-size: 0.85rem;
+            color: #fff;
+            margin-bottom: 1.5rem;
+        }
+
+        .contact-left h2 {
+            font-size: clamp(2rem, 3.5vw, 3rem);
+            line-height: 1.15;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 1rem;
+        }
+
+        .contact-left h2 span {
+            color: var(--accent);
+        }
+
+        .contact-left p {
+            color: var(--text-muted);
+            font-size: 1rem;
+            line-height: 1.7;
+            max-width: 450px;
+            margin-bottom: 1.8rem;
+        }
+
+        .write-email-wrapper {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: #ffffff;
+            color: #0b0f19;
+            padding: 0.6rem 1.4rem 0.6rem 0.6rem;
+            border-radius: 99px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .write-email-wrapper:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(45, 212, 191, 0.3);
+        }
+
+        .widget-mail-icon {
+            width: 36px;
+            height: 36px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #0b0f19;
+            box-shadow: 0 0 10px var(--accent-glow);
+        }
+
+        .contact-right-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.2rem;
+        }
+
+        .contact-card {
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid var(--surface-border);
+            border-radius: 18px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 180px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .contact-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
+            box-shadow: 0 12px 30px var(--accent-glow);
+        }
+        .contact-card:hover .contact-icon {
+            background: rgba(45, 212, 191, 0.2);
+            color: var(--accent);
+            transform: scale(1.08);
+        }
+
+        .contact-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            transition: all 0.3s ease;
+            margin-bottom: 1rem;
+        }
+
+        .contact-card-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 0.2rem;
+        }
+
+        .contact-card-sub {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        .contact-action-btn {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--surface-border);
+            padding: 0.5rem 0.8rem;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            color: var(--text-main);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: 0.2s;
+        }
+
+        .contact-card:hover .contact-action-btn {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        /* --- 6. FOOTER SECTION --- */
+        .footer-section {
+            width: 100%;
+            background: rgba(7, 10, 18, 0.95);
+            border-top: 1px solid var(--surface-border);
+            padding: 5rem 0 2rem 0;
+            margin-top: 4rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .footer-content-wrapper {
+            max-width: 1200px;
+            width: 92%;
+            display: grid;
+            grid-template-columns: 1.4fr 1fr 1.2fr 1.3fr;
+            gap: 2.5rem;
+            padding-bottom: 3rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .footer-col h3.footer-logo {
+            font-size: 1.2rem;
+            color: #fff;
+            font-weight: 700;
+            margin-bottom: 0.2rem;
+        }
+        .footer-col h3.footer-logo span {
+            color: var(--accent);
+        }
+        .footer-subtext {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
+        }
+
+        .footer-col p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 1.2rem;
+        }
+
+        .footer-heading-line {
+            font-size: 0.95rem;
+            color: #fff;
+            font-weight: 700;
+            margin-bottom: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .footer-heading-line::before {
+            content: '';
+            width: 16px;
+            height: 2px;
+            background-color: var(--accent);
+            display: inline-block;
+        }
+
+        .footer-links-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        .footer-links-list a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: 0.2s;
+        }
+        .footer-links-list a:hover {
+            color: var(--accent);
+            padding-left: 4px;
+        }
+
+        .footer-links-double {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+        }
+
+        .footer-contact-items {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            margin-bottom: 1.2rem;
+            font-size: 0.88rem;
+            color: var(--text-muted);
+        }
+        .footer-contact-items div {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .footer-contact-items svg {
+            color: var(--accent);
+            flex-shrink: 0;
+        }
+
+        .footer-social-row {
+            display: flex;
+            gap: 0.6rem;
+        }
+        .footer-social-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--surface-border);
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+        .footer-social-btn:hover {
+            background: var(--accent);
+            color: #0b0f19;
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .newsletter-form {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            margin-top: 0.5rem;
+        }
+        .newsletter-input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--surface-border);
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 0.9rem;
+            outline: none;
+            transition: 0.2s;
+        }
+        .newsletter-input:focus {
+            border-color: var(--accent);
+        }
+        .newsletter-submit {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--accent);
+            color: #0b0f19;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 4px 15px var(--accent-glow);
+        }
+        .newsletter-submit:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        .footer-bottom-bar {
+            max-width: 1200px;
+            width: 92%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 2rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .back-to-top-btn {
+            width: 44px;
+            height: 44px;
+            background: var(--accent);
+            color: #0b0f19;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 15px var(--accent-glow);
+            transition: 0.3s;
+        }
+        .back-to-top-btn:hover {
+            transform: translateY(-3px);
+            opacity: 0.9;
+        }
+
+        /* --- Responsif HP & Tablet --- */
+        @media (max-width: 900px) {
+            .hero-section, .about-grid {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            .badge-status, .about-badge-top {
+                margin: 0 auto 1.2rem auto;
+            }
+            .hero-banner-container, .about-visual-area {
+                height: 280px;
+                margin-top: 1rem;
+            }
+            .contact-layout {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            .contact-right-grid {
+                grid-template-columns: 1fr;
+            }
+            .footer-content-wrapper {
+                grid-template-columns: 1fr;
+                gap: 2.5rem;
+            }
+            .floating-nav-container {
+                top: 1rem;
+                width: 92vw;
+            }
+            .floating-nav {
+                width: 100%;
+                overflow-x: auto;
+                justify-content: flex-start;
+                padding: 4px;
+                scrollbar-width: none;
+            }
+            .floating-nav::-webkit-scrollbar {
+                display: none;
+            }
+            .nav-item {
+                padding: 6px 12px;
+                font-size: 0.8rem;
+            }
+            .main-container {
+                width: 95%;
+                padding-top: 6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Floating Navigation Bar dengan Auto-Hide -->
+    <div class="floating-nav-container" id="navContainer">
+        <nav class="floating-nav">
+            <a href="#home" class="nav-item active">Home</a>
+            <a href="#about" class="nav-item">About</a>
+            <a href="#skills" class="nav-item">Skills</a>
+            <a href="#projects" class="nav-item">Projects</a>
+            <a href="#contact" class="nav-item">Contact</a>
+        </nav>
+    </div>
+
+    <!-- Main Container (Full-Width Mode) -->
+    <div class="main-container">
+        
+        <!-- 1. HERO SECTION DENGAN 3D FLIP PHOTO BANNER -->
+        <div class="card-section hero-section" id="home">
+            <div class="hero-content">
+                <div class="badge-status">
+                    <div class="status-dot"></div> Tersedia untuk Proyek Baru
+                </div>
+                <h1>Membangun Solusi Digital dengan <span>Kode & Estetika.</span></h1>
+                <p class="hero-desc">Halo! Saya seorang pengembang perangkat lunak yang berfokus pada pembuatan antarmuka web modern, fungsional, dan memiliki performa tinggi.</p>
+            </div>
+            
+            <div class="hero-banner-container">
+                <div class="hero-banner-inner">
+                    <div class="hero-banner-front">
+                        <img src="foto-saya.jpg" alt="Foto Profil Utama" class="hero-banner-img">
+                    </div>
+                    <div class="hero-banner-back">
+                        <div class="back-card-icon">✨</div>
+                        <div class="back-card-title">Let's Build Together</div>
+                        <p class="back-card-desc">Fokus pada kode bersih, performa tinggi, dan pengalaman pengguna yang luar biasa.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. ABOUT SECTION (Desain Baru Elegan Sesuai Referensi) -->
+        <div class="card-section" id="about">
+            <div class="about-grid">
+                
+                <!-- Sisi Kiri: Teks Narasi -->
+                <div class="about-left">
+                    <div class="about-badge-top">
+                        <span class="line"></span> WHO IS GUSTI GIBRAN AVATTAR?
+                    </div>
+                    <h2 class="about-title">Transforming ideas into <span>digital reality</span></h2>
+                    <p class="about-desc">
+                        I am a passionate <strong>UI/UX Designer & Frontend Engineer</strong> dedicated to crafting intuitive and visually stunning digital experiences.
+                    </p>
+                    <p class="about-desc">
+                        With <strong>3 years</strong> of focused learning and hands-on practice, I bridge the gap between creative design and technical implementation. My goal is to build applications that not only look good but feel natural to use.
+                    </p>
+                    <p class="about-desc">
+                        I constantly explore new technologies and design trends to keep my work modern and effective, ensuring every project I touch meets the highest professional standards.
+                    </p>
+
+                    <div class="about-pills-row">
+                        <div class="about-pill-item">📱 Responsive Design</div>
+                        <div class="about-pill-item">✨ Modern Design</div>
+                        <div class="about-pill-item">⚡ Performance</div>
+                    </div>
+                </div>
+
+                <!-- Sisi Kanan: Foto Profil dengan Radar & Kartu Statistik Melayang -->
+                <div class="about-right">
+                    <div class="about-visual-area">
+                        <div class="about-radar-bg outer"></div>
+                        <div class="about-radar-bg"></div>
+
+                        <!-- Foto Profil Bundar -->
+                        <div class="about-avatar-wrapper">
+                            <img src="foto-saya.jpg" alt="Gusti Gibran Avattar" class="about-avatar-img">
+                        </div>
+
+                        <!-- Kartu Melayang 1 -->
+                        <div class="floating-stat-card fsc-1">
+                            <div class="fsc-icon">🚀</div>
+                            <div class="fsc-info">
+                                <div class="fsc-num">3</div>
+                                <div class="fsc-label">Years Learning</div>
+                            </div>
+                        </div>
+
+                        <!-- Kartu Melayang 2 -->
+                        <div class="floating-stat-card fsc-2">
+                            <div class="fsc-icon">💻</div>
+                            <div class="fsc-info">
+                                <div class="fsc-num">5+</div>
+                                <div class="fsc-label">Projects Done</div>
+                            </div>
+                        </div>
+
+                        <!-- Kartu Melayang 3 -->
+                        <div class="floating-stat-card fsc-3">
+                            <div class="fsc-icon">⚡</div>
+                            <div class="fsc-info">
+                                <div class="fsc-num">10+</div>
+                                <div class="fsc-label">Technologies</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- 3. SKILLS & TECHNOLOGIES SECTION -->
+        <div class="card-section" id="skills">
+            <div class="skills-header">
+                <h2 class="skills-main-title">Skills & <span>Technologies</span></h2>
+                <p class="skills-subtitle">A curated set of tools and technologies I use to bring digital products to life.</p>
+            </div>
+            
+            <div class="skills-grid-container">
+                
+                <div class="tech-card">
+                    <div>
+                        <div class="tech-icon-box">
+                            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                        </div>
+                        <h3 class="tech-card-title">Languages</h3>
+                        <p class="tech-card-desc">The programming languages that I often use.</p>
+                    </div>
+                    <div class="tech-tags-wrapper">
+                        <span class="tech-tag">JavaScript</span>
+                        <span class="tech-tag">TypeScript</span>
+                    </div>
+                </div>
+
+                <div class="tech-card">
+                    <div>
+                        <div class="tech-icon-box">
+                            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+                        </div>
+                        <h3 class="tech-card-title">Frameworks</h3>
+                        <p class="tech-card-desc">A great tool for building today's growing applications.</p>
+                    </div>
+                    <div class="tech-tags-wrapper">
+                        <span class="tech-tag">Next.js</span>
+                        <span class="tech-tag">React</span>
+                        <span class="tech-tag">React Native Expo</span>
+                        <span class="tech-tag">Astro</span>
+                        <span class="tech-tag">AngularJS</span>
+                    </div>
+                </div>
+
+                <div class="tech-card">
+                    <div>
+                        <div class="tech-icon-box">
+                            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"/></svg>
+                        </div>
+                        <h3 class="tech-card-title">Design Tools</h3>
+                        <p class="tech-card-desc">Crafting beautiful and intuitive interfaces.</p>
+                    </div>
+                    <div class="tech-tags-wrapper">
+                        <span class="tech-tag">Figma</span>
+                        <span class="tech-tag">Canva</span>
+                        <span class="tech-tag">Alight Motion</span>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+
+        <!-- 4. PROJECTS SECTION -->
+        <div class="card-section" id="projects">
+            <h2 class="section-title">🚀 Proyek Unggulan</h2>
+            <div class="projects-wrapper">
+                
+                <div class="project-card">
+                    <div>
+                        <h3>EnglishGrammar Kids</h3>
+                        <p>Platform edukasi interaktif bahasa Inggris untuk anak-anak dengan sistem kuis berbasis modul Present Tense.</p>
+                    </div>
+                    <a href="#" class="project-btn">Lihat Detail</a>
+                </div>
+
+                <div class="project-card">
+                    <div>
+                        <h3>DataDash Analytics</h3>
+                        <p>Dashboard manajemen inventaris dengan fitur filter data cepat dan visualisasi grafik dinamis.</p>
+                    </div>
+                    <a href="#" class="project-btn">Lihat Detail</a>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- 5. CONTACT SECTION -->
+        <div class="card-section" id="contact">
+            <div class="contact-layout">
+                
+                <div class="contact-left">
+                    <div class="badge-connect">💬 Let's Connect</div>
+                    <h2>Ready to start your <span>next project?</span></h2>
+                    <p>I'm always open to discussing new projects, creative ideas or opportunities to be part of your visions.</p>
+                    
+                    <a href="mailto:gustigibranavattar@gmail.com" class="write-email-wrapper">
+                        <div class="widget-mail-icon">
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                        </div>
+                        <span>Write me an email ✉️</span>
+                    </a>
+                </div>
+
+                <div class="contact-right-grid">
+                    
+                    <div class="contact-card email" onclick="copyEmailText('gustigibranavattar@gmail.com')">
+                        <div>
+                            <div class="contact-icon">
+                                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                            </div>
+                            <div class="contact-card-title">Email Me</div>
+                            <div class="contact-card-sub">gustigibranavattar@gmail.com</div>
+                        </div>
+                        <div class="contact-action-btn">
+                            <span id="copyBtnText">Copy Email</span>
+                            <span>📋</span>
+                        </div>
+                    </div>
+
+                    <a href="https://linkedin.com" target="_blank" class="contact-card linkedin">
+                        <div>
+                            <div class="contact-icon">
+                                <svg width="22" height="22" fill="currentColor" viewBox="0 0 24 24"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.2v-8.37H6.46M7.83 6.42c-.91 0-1.65.74-1.65 1.65s.74 1.65 1.65 1.65 1.65-.74 1.65-1.65-.74-1.65-1.65-1.65Z"/></svg>
+                            </div>
+                            <div class="contact-card-title">LinkedIn</div>
+                            <div class="contact-card-sub">Professional Profile</div>
+                        </div>
+                        <div class="contact-action-btn">
+                            <span>Connect</span>
+                            <span>↗</span>
+                        </div>
+                    </a>
+
+                    <a href="https://github.com" target="_blank" class="contact-card github">
+                        <div>
+                            <div class="contact-icon">
+                                <svg width="22" height="22" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.1-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2Z"/></svg>
+                            </div>
+                            <div class="contact-card-title">GitHub</div>
+                            <div class="contact-card-sub">Code Repository</div>
+                        </div>
+                        <div class="contact-action-btn">
+                            <span>Follow</span>
+                            <span>↗</span>
+                        </div>
+                    </a>
+
+                    <div class="contact-card location">
+                        <div>
+                            <div class="contact-icon">
+                                <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                            </div>
+                            <div class="contact-card-title">Location</div>
+                            <div class="contact-card-sub">Malang, Indonesia</div>
+                        </div>
+                        <div class="contact-action-btn" style="color: var(--text-muted);">
+                            <span>Remote / On-site</span>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- --- 6. FOOTER SECTION --- -->
+    <footer class="footer-section">
+        <div class="footer-content-wrapper">
+            
+            <div class="footer-col">
+                <div class="footer-subtext">GUTSI</div>
+                <h3 class="footer-logo">Gibran <span>Portfolio</span></h3>
+                <p>Building websites and applications that actually work well for real people.</p>
+                <div class="footer-contact-items" style="margin-top: 1rem;">
+                    <div>
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                        Web Development
+                    </div>
+                    <div>
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"/></svg>
+                        UI/UX Design
+                    </div>
+                    <div>
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+                        Front-end Engineer
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-col">
+                <h4 class="footer-heading-line">Quick Links</h4>
+                <div class="footer-links-double">
+                    <ul class="footer-links-list">
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#skills">Skills</a></li>
+                        <li><a href="#projects">Projects</a></li>
+                    </ul>
+                    <ul class="footer-links-list">
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-col">
+                <h4 class="footer-heading-line">Get in Touch</h4>
+                <div class="footer-contact-items">
+                    <div>
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                        gustigibranavattar@gmail.com
+                    </div>
+                    <div>
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                        Malang, East Java, Indonesia
+                    </div>
+                    <div>🟢 Available for Work</div>
+                </div>
+                <div class="footer-social-row">
+                    <a href="https://github.com" target="_blank" class="footer-social-btn" title="GitHub">
+                        <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.1-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2Z"/></svg>
+                    </a>
+                    <a href="https://linkedin.com" target="_blank" class="footer-social-btn" title="LinkedIn">
+                        <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.2v-8.37H6.46M7.83 6.42c-.91 0-1.65.74-1.65 1.65s.74 1.65 1.65 1.65 1.65-.74 1.65-1.65-.74-1.65-1.65-1.65Z"/></svg>
+                    </a>
+                    <a href="https://instagram.com" target="_blank" class="footer-social-btn" title="Instagram">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                    </a>
+                    <a href="https://twitter.com" target="_blank" class="footer-social-btn" title="Twitter/X">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                    </a>
+                </div>
+            </div>
+
+            <div class="footer-col">
+                <h4 class="footer-heading-line">Stay Updated</h4>
+                <p>Follow to get the latest updates on my projects and blog posts.</p>
+                <form class="newsletter-form" onsubmit="event.preventDefault(); alert('Terima kasih sudah berlangganan!');">
+                    <input type="email" placeholder="Enter your email" class="newsletter-input" required>
+                    <button type="submit" class="newsletter-submit">Follow</button>
+                </form>
+            </div>
+
+        </div>
+
+        <div class="footer-bottom-bar">
+            <p>&copy; 2026 Gusti Gibran Avattar. All rights reserved.</p>
+            <a href="#home" class="back-to-top-btn" title="Kembali ke atas">↑</a>
+        </div>
+    </footer>
+
+    <!-- JavaScript Interaktif -->
+    <script>
+        const navItems = document.querySelectorAll('.nav-item');
+        navItems.forEach(item => {
+            item.addEventListener('click', function() {
+                navItems.forEach(nav => nav.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        let lastScrollTop = 0;
+        const navContainer = document.getElementById('navContainer');
+
+        window.addEventListener('scroll', function() {
+            let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            
+            if (scrollTop > lastScrollTop && scrollTop > 80) {
+                navContainer.classList.add('hide');
+            } else {
+                navContainer.classList.remove('hide');
+            }
+            lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+        });
+
+        function copyEmailText(email) {
+            navigator.clipboard.writeText(email).then(() => {
+                const btnTest = document.getElementById('copyBtnText');
+                btnTest.innerText = 'Copied! ✓';
+                setTimeout(() => {
+                    btnTest.innerText = 'Copy Email';
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>
